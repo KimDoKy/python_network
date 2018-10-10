@@ -25,7 +25,9 @@ def main():
 
     # Third try_except block -- sending data
     try:
-        s.sendall("GET %s HTTP/1.0\r\n\r\n" % filename)
+        message = "GET %s HTTP/1.0\r\n\r\n" % filename
+        print(message)
+        s.sendall(message.encode())
     except socket.error as e:
         print("Error sending data : ", f'{e}')
         sys.exit(1)
