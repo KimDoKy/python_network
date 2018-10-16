@@ -72,5 +72,9 @@ TCP 소켓은 블로킹 모드가 기본값이다.
 NTP 클라이언트를 생성한 후, NTP 서버인 pool.ntp.org에 NTP를 전송하고, 응답결과를 `ctime()`을 사용해 출력했다.
 
 ### SNTP 클라이언트 작성
+NTP 서버가 제공하는 정확도의 시간 정보가 필요없을 때는, SNTP(Simple Network Time Protocol)을 사용할 수 있다.
+
+> TypeError: a bytes-like object is required, not 'str' 에러 발생.
+타입 검토 필요
 
 ### 간단한 에코 클라이언트/서버 애플리케이션 작성
