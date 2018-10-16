@@ -10,7 +10,7 @@ def reuse_socket_addr():
 
     # Enable the SO_REUSEADDR option
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    new_state = sock.getsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR)
+    new_state =  sock.getsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR)
     print("New sock state: %s" % new_state)
 
     local_port = 8282
@@ -23,11 +23,11 @@ def reuse_socket_addr():
     while True:
         try:
             connection, addr = srv.accept()
-            print('Connected by %s: %s' % (addr[0], addr[1]))
+            print("Connected by %s:%s" % (addr[0], addr[1]))
         except KeyboardInterrupt:
             break
         except socket.error as msg:
-            print('%s' % (msg, ))
+            print("%s" % (msg, ))
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     reuse_socket_addr()
