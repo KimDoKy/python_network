@@ -45,3 +45,54 @@ SocketServer 라이브러리를 사용해 비동기적인 네트워크 서버를
 
 2_3_chat_server_with_select.py --name=client1 --port=8800
 2_3_chat_server_with_select.py --name=client2 --port=8800
+
+## select.epoll을 이용한 웹 서버 멀티플렉싱
+`select.epoll()`을 활용하면 운영체제 커널이 네트워크 이벤트를 주기적으로 감시하며, 어떤 이벤트가 발생할 때마다 스크립트에 알려준다.
+
+웹 서버의 핵심 코드는 웹 서버 초기화 시 `select.epoll()`을 호출한 후 이벤트 발생 통보를 위해 서버 소켓의 파일 디스크립터를 등록하는 부분이다.
+
+2_4_simple_web_server_with_epoll.py --port=8800
+
+스크립트 실행후 웹 브라우저에서 localhost:8800 으로 접속하면 콘솔에서 아래와 같이 출력한다.
+
+```
+Started Epoll Server
+----------------------------------------
+GET / HTTP/1.1
+Host: localhost:8800
+Connection: keep-alive
+Cache-Control: max-age=0
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8
+Accept-Encoding: gzip, deflate, br
+Accept-Language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+
+----------------------------------------
+GET /favicon.ico HTTP/1.1
+Host: localhost:8800
+Connection: keep-alive
+Pragma: no-cache
+Cache-Control: no-cache
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36
+Accept: image/webp,image/apng,image/*,*/*;q=0.8
+Referer: http://localhost:8800/
+Accept-Encoding: gzip, deflate, br
+Accept-Language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+```
+
+웹 브라우저에서는 `Hello from Epoll Server!`를 볼 수 있다.
+
+EpollServer의 생성자에서는 서버의 소켓을 생성한 후 localhost의 인자로 주어진 포트에 바인딩한다.  
+그 후 소켓을 논블로킹 모드로 설정한다. 서버는 SSH처럼 버퍼링없이 데이터 교환을 할 수 있도록 TCP_NODELAY 옵션을 설정한다.  
+`select.epoll()`을 호출하여 폴링(polling) 객체를 생성하고, 이 객체의 소켓의 파일 디스크립터를 전달해 소켓의 이벤트를 감시한다.
+
+run()은 소켓 이븐트를 수신하는데, 다음 둘 중 하나에 속한다.
+
+ - EPOLLIN : 이벤트를 읽는다.
+ - EPOLLOUT : 이벤트를 쓴다.
+
+ 소켓이 데이터를 쓰려는 연결을 갖고 있는 경우 EPOLLOUT 이벤트를 다루는 부분이 처리한다.  
+ EPOLLHUP 이벤트는 내부 에러 상태로 인해 소켓이 종료됐음을 의미한다.
+
+ ## 디젤 병렬 라이브러리를 이용한 에코 서버 멀티플렉싱
