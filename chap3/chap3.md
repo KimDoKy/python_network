@@ -71,6 +71,18 @@
 - 3_6_find_network_interface_status.py --ifname=eth0
 
 ## 내부 네트워크상에서 비활성화된 컴퓨터 탐지
+네트워크를 스캐닝하는 프로그램.  
+Scapy는 네트워크 분석 라이브러리로, ICMP 스캐닝을 실행한다.  
+이 작업을 주기적으로 실행하야 하므로 스케쥴링하는 sched 모듈이 필요하다.  
+
+- 3_7_detect_inactive_machines.py --scan-hosts=10.0.2.2-4
+
+ - 명령행 인자를 통해 네트워크 호스트의 목록을 넘겨받는다.
+ - 1초 후 detect_inactive_hosts()를 실행해 스케줄을 생성한다.
+ - 이 함수는 scan_hosts를 매개변수로 받고 Scapy의 sr() 함수를 호출한다.
+ - sr()은 schedule.enter()를 다시 호출해 10초마다 재귀하여 주기적으로 스캐닝을 한다.
+Scapy의 sr()은 IP 주소 목록, 하위 프로토콜, 그 외 스캐닝 관련 정보를 매개변수로 받는다.  
+sr()은 응답하는 호스트와 응답하지 않는 호스트 정보를 튜플로 반환한다.
 
 ## 연결된 소켓을 이용한 기본적인 IPC 실행
 
