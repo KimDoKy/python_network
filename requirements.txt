@@ -18,7 +18,7 @@ http-parser==0.8.3
 idna==2.7
 invoke==1.2.0
 itsdangerous==0.24
-Jinja2==2.10
+Jinja2==2.11.3
 MarkupSafe==1.0
 netaddr==0.7.19
 netifaces==0.10.7
