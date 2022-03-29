@@ -24,7 +24,7 @@ netaddr==0.7.19
 netifaces==0.10.7
 nmap==0.0.1
 ntplib==0.3.3
-paramiko==2.4.2
+paramiko==2.10.1
 pbr==4.3.0
 pyasn1==0.4.4
 pycparser==2.19
